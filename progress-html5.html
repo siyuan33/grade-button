@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+  (() => {
+
+    document.body.style.cssText = "height:9999px;"
+
+    const progressNode = document.createElement("progress")
+    progressNode.max = "100"
+    progressNode.value = "0"
+    progressNode.style.cssText = "position:fixed;"
+    document.body.appendChild(progressNode)
+    const windowHeight = document.body.clientHeight
+    const h = windowHeight - window.innerHeight
+    let per
+    document.addEventListener("scroll", function callback() {
+
+      移动端和PC兼容性要使用scrollingElement
+      per = (document.scrollingElement.scrollTop / h) * 100
+      progressNode.value = per.toFixed(1)
+    })
+  })()
+
+</script>
+
+</html>
