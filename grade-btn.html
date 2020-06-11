@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+</head>
+
+<body>
+</body>
+<script>
+  (() => {
+    // 常量
+    const btnWidth = 200
+    const btnHeight = 50
+
+    //function
+    function addClass(node, ...classNames) {
+      if (Number(node.nodeType) !== 1) {
+        throw new Error('传入的不是HTMLElement')
+        return
+      }
+      for (let item of classNames) {
+        node.classList.add(item)
+      }
+    }
+
+    // 添加样式
+    const cssText = `
+  #btn{
+    width: ${btnWidth}px;
+    height: ${btnHeight}px;
+    border-radius:10px;
+    border:none;
+    background: orange;
+    margin-top:30px;
+    position:relative;
+    overflow:hidden;
+    text-align:center;
+    line-height:${btnHeight}px;
+    cursor:pointer;
+ }
+    #circle{
+  width: ${btnWidth}px;
+  height: ${btnWidth}px;
+  background:black;
+  z-index: 1;
+  position:absolute;
+  border-radius:50%;
+  left:0;
+  top:-75px;
+  opacity:0.5;
+  transform: scale(0)
+}
+   .animate{
+   animation:circleLayout 0.5s ease-in-out;
+}
+    @keyframes circleLayout{
+    from {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    to {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+`
+    window.onload = () => {
+      const wrapper = document.createElement("div")
+      wrapper.setAttribute('id', 'btn')
+      wrapper.appendChild(document.createTextNode("按钮"))
+      const circle = document.createElement("span")
+      circle.setAttribute('id', 'circle')
+      wrapper.appendChild(circle);
+      document.body.appendChild(wrapper)
+
+      const style = document.createElement("style")
+      style.appendChild(document.createTextNode(cssText));
+      const head = document.getElementsByTagName('head')[0];
+      head.appendChild(style);
+      // 添加监听事件
+      const btnNode = document.getElementById("btn")
+      const circleNode = document.getElementById("circle")
+      console.log('1');
+
+      btnNode.addEventListener("click", function callback(e) {
+        const top = parseInt(window.getComputedStyle(circleNode).top) + e.offsetY - (btnHeight / 2) + "px"
+        const left = parseInt(window.getComputedStyle(circleNode).left) + e.offsetX - (btnWidth / 2) + "px"
+        circleNode.style.top = top
+        circleNode.style.left = left
+        addClass(circleNode, "animate")
+        circleNode.addEventListener("animationend", function callback() {
+          circleNode.style.top = -((btnWidth - btnHeight) / 2) + "px"
+          circleNode.style.left = 0 + "px"
+          circleNode.classList.remove("animate")
+          circleNode.removeEventListener("animationend", callback)
+        })
+      })
+    }
+  })()
+</script>
+
+</html>
